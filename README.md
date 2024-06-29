@@ -1,15 +1,43 @@
-# Map-of-Graduation-Direction
-A visual distribution map of graduation destinations, using AMAP API.
+![](https://i1.mcobj.com/imgb/u18prz/20240629_66801e5dd281f.png)
 
-DEMO: https://h5.app.pizyds.com/chzx-2019-11-byqx/
+# Map-of-Graduation-Direction
+
+A visual distribution map of graduation destinations, using AMAP API.
 
 ## 一个可视化的毕业去向分布地图，使用了高德地图API。
 
 技术不佳，文档翻遍。东改西改，代码凌乱。
 
-但是可变数据均在 `.\js\schoools.js` 下，可直接修改使用。
+### 特征介绍
 
-本地调试建议建立一小型http服务器，如不更换API Key，~~请在hosts里将`localhost.pizyds.com`解析至`127.0.0.1`~~，全局安装express后，可直接运行`express.js`来建立本地http服务器，访问`localhost.pizyds.com:8080`来进行调试（我的API设有Referer限制）。
+- 良好的跨平台支持。
+- 信息修改便捷。
+- 支持点击信息列表快速跳转对应位置。
+- 界面简洁美观。
 
-建议电脑端浏览，手机端尚可，但未做界面适配。
+### 相关信息
 
+对于可变内容，修改 `data\v1\schoolInfo` 即可。
+
+本分支修改了以下内容：
+
+- 修改信息分类方式：现在采取院校组合模式，信息窗口更清晰。
+- 重写信息窗口和位置标注部分，规避高德地图低限额API。（高德你现在怎么连静态地图都有限额了。。。）
+- 导航搜索和跳转功能优化。
+
+- 新的信息格式如下：
+
+```
+{
+        id: "NKU",// 每院校组唯一ID
+        displayName: "南开大学（八里台校区）", // 显示在悬浮窗口和人员列表的名称
+        lng: "117.167328",// 经纬度，可以登陆账号后从https://lbs.amap.com/tools/picker获取
+        lat: "39.103715",
+        students: [// 学生信息
+            {name:"学生甲", major:"法学"},
+            {name:"学生乙", major:"工科试验班（信息计算科学）"}
+        ]
+}
+```
+
+![](https://i1.mcobj.com/imgb/u18prz/20240629_66801fd5bd01b.png)

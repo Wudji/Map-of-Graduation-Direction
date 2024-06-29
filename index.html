@@ -21,83 +21,83 @@
     <script>
         //更新时间和版本信息
         updateTime = '2024年6月29日';
-        version = 'v1.1.1';
+        version = 'v3.1.2';
     </script>
 </head>
 
 <body>
-    <div id="container" class="container">
-    </div>
+    <style>
+    #container
+    .input-card{
+        width: 32rem;
+        z-index: 170;
+    }
+    
+    .input-card .btn{
+        margin-right: .8rem;
+    }
+    
+    .input-card .btn:last-child{
+        margin-right: 0;
+    }
+    .markerInfo {
+        position: absolute;
+        top: -20px;
+        color: #2a2a2a;
+        padding: 4px 10px;
+        box-shadow: 1px 1px 1px rgba(10, 10, 10, .2);
+        text-overflow: clip;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 12px;
+        font-family: "";
+        background-color: #def1ff;
+        border-radius: 3px;
+    }
+    
+    #personList{
+        overflow-y:auto;
+        background-color: #141e1b; 
+        border-color: #F5F2E9;
+        border-width: 1px;
+        border-style: solid;
+        transition: height 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+        right: 0px
+    
+    }
+    .collapse-button {
+        position: absolute; 
+        right: 5px; 
+        top: 25px; 
+        transform: translateY(-50%); 
+        background-color: #141e1b; 
+        color: #a0b3bc; 
+        z-index: 1;
+        padding: 0.5rem;
+        cursor: pointer;
+        border-radius: 10%;
+        border-color: #F5F2E9;
+        border-width: 1px;
+        border-style: solid;
+    }
+    .input-text{
+        color: #a0b3bc;
+        font-weight: bold;
+        
+    }
+    .check-button:checked{
+        color: #424b50;
+    }
+    </style>
+    <div id="container" class="container"></div>
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css" rel=" stylesheet ">
     <script src="https://webapi.amap.com/loader.js"></script>
-    <script src="js/schoolInfo.js"></script>
+    <script src="data/v1/schoolInfo.js"></script>
     <script type="text/javascript">
         window._AMapSecurityConfig = {
             securityJsCode:"7ee2b6cc82791680c2f5c341f2e515c5",
         }
     </script>
-    <style>
-            #container
-            .input-card{
-                width: 32rem;
-                z-index: 170;
-            }
-    
-            .input-card .btn{
-                margin-right: .8rem;
-            }
-    
-            .input-card .btn:last-child{
-                margin-right: 0;
-            }
-            .markerInfo {
-                position: absolute;
-                top: -20px;
-                color: #2a2a2a;
-                padding: 4px 10px;
-                box-shadow: 1px 1px 1px rgba(10, 10, 10, .2);
-                text-overflow: clip;
-                overflow: hidden;
-                white-space: nowrap;
-                font-size: 12px;
-                font-family: "";
-                background-color: #def1ff;
-                border-radius: 3px;
-            }
-            
-            #personList{
-                overflow-y:auto;
-                background-color: #141e1b; 
-                border-color: #F5F2E9;
-                border-width: 1px;
-                border-style: solid;
-                transition: height 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
-                right: 0px
-            
-            }
-            .collapse-button {
-                position: absolute; 
-                right: 5px; 
-                top: 25px; 
-                transform: translateY(-50%); 
-                background-color: #141e1b; 
-                color: #a0b3bc; 
-                z-index: 1;
-                padding: 0.5rem;
-                cursor: pointer;
-                border-radius: 10%;
-                border-color: #F5F2E9;
-                border-width: 1px;
-                border-style: solid;
-            }
-            .input-text{
-                color: #a0b3bc;
-                font-weight: bold;
-                
-            }
-            .check-button:checked{
-                color: #424b50;
-            }
-    </style>
  
     <div id="personList" class="input-card" style="width: 25rem;height: 21rem;">
         <button id="collapseButton" class="collapse-button">收起</button>
@@ -166,8 +166,11 @@
             schools.forEach(school => {
                 // 处理学生信息
                 school.students.forEach(student => {
+                    // 这东西写得太烂了↓
                     document.getElementById("coordinate").innerHTML += ('<div class="input-item"><input id="' + index.toString()
-                    + '" name="language" type="radio" class="check-button" onClick = "switchToPosition(this)"><span class="input-text">' + student.name + '  ' + school.displayName + '</span></div>');
+                    + '" name="language" type="radio" class="check-button" onclick = "switchToPosition(this)"><span class="input-text" id="' + index.toString() + '" onclick = "switchToPosition(this)">' + student.name + '  ' + school.displayName 
+                        + '</span><i class="fa-solid fa-location-arrow" id="' + index.toString() +'" onclick="switchToPosition(this)" style="color: #def1ff;"></i>' + '&nbsp&nbsp&nbsp&nbsp<i class="fa-solid fa-magnifying-glass-location" id="' 
+                        + school.id + '" onclick="pullNavigation(this)" style="color: #def1ff;"></i>' + '</div>');
                     
                     // 经纬度表
                     positions.push([school.lng,school.lat]);
@@ -179,12 +182,28 @@
                 schoolIndex ++;
             });
         }
-
+        
+        // personList部分：地图位置切换和拉起导航
         function switchToPosition(input){
             // setCenter(center, immediately, duration)
             map.setCenter(positions[input.id], false, 800);
             map.setZoom(13);
         }
+
+        function pullNavigation(obj){
+            let targetName = null;
+            try{
+                schools.forEach((school)=>{
+                if (school.id == obj.id){
+                    targetName = school.displayName;
+                    throw new Error();
+                }
+            })
+            }catch (e){
+                window.open("https://ditu.amap.com/search?query=" + targetName);
+            }
+        }
+            
 
         function pushAmapPoint(school, schoolIndex){
             let marker = new AMap.Marker({
@@ -255,7 +274,7 @@
         </p>
         <p style="left:3px; right:3px"> 
             <font size="2" color='#675670'> 技术支持：Wudji</font>
-            <a href="http://www.wudji.top/h5app/cft"><font size="1" color='#675670'>http://www.wudji.top/h5app/cft</font></a>
+            <a href="http://www.example.top/h5app/cft"><font size="1" color='#675670'>http://www.example.top/h5app/cft</font></a>
             <font size="2" color='#675670'> <br />最近更新：<script>document.write(updateTime);</script><br />大学条目：<script>document.write(schools.length);</script></font>
         </p>
     </div>

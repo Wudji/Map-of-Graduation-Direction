@@ -10,10 +10,10 @@ var schools = [
         ]
     },
     {
-        id: "HUST",
-        displayName: "华中科技大学",
-        lng: "114.413301",
-        lat: "30.513197",
+        id: "ZJU",
+        displayName: "浙江大学（紫金港）",
+        lng: "120.081968",
+        lat: "30.302257",
         students: [
             {name:"学生丙", major:"未来技术学院"},
             {name:"学生丁", major:"芝士专业名称"},
