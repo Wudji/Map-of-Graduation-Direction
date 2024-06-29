@@ -40,4 +40,4 @@ A visual distribution map of graduation destinations, using AMAP API.
 }
 ```
 
-![](https://i1.mcobj.com/imgb/u18prz/20240629_66801fd5bd01b.png)
+![](https://img.picui.cn/free/2024/06/29/66802150e8a91.png)
